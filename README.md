@@ -12,7 +12,6 @@
 
 ## 📷 截图速览
 
-> 截图文件待补充至 [`docs/screenshots/`](docs/screenshots/)（[补图说明](docs/screenshots/README.md)）。
 
 | 首页 | 详情 |
 |---|---|
