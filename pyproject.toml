@@ -1,5 +1,5 @@
 [project]
-name = "momentum"
+name = "note"
 version = "0.1.0"
 description = "A clean memo application built with Flask"
 readme = "README.md"
