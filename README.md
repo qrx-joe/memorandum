@@ -12,7 +12,6 @@
 
 ## 📷 截图速览
 
-
 | 首页 | 详情 |
 |---|---|
 | ![首页](docs/screenshots/home.png) | ![详情](docs/screenshots/detail.png) |
@@ -20,6 +19,10 @@
 | 编辑模式 | 标签筛选 |
 |---|---|
 | ![编辑](docs/screenshots/edit.png) | ![标签](docs/screenshots/tag-filter.png) |
+
+| 移动端响应式 |
+|---|
+| ![移动端](docs/screenshots/mobile.png) |
 
 ---
 
@@ -97,25 +100,25 @@
 
 ## 💡 踩坑与学到了什么
 
-> 以下每条都锚定到真实 commit,不是事后补的故事。
+> 以下每条都锚定到真实 commit，不是事后补的故事。
 
 - **「先备份后写入」差点等于「先备份后销毁备份」**
-  原来 `load_memos` 在 JSON 损坏时静默返回 `[]`,下一次 `save_memos` 又会先备份再写空列表 —— 等于**用空列表覆盖掉备份,数据彻底没了**。
+  原来 `load_memos` 在 JSON 损坏时静默返回 `[]`，下一次 `save_memos` 又会先备份再写空列表 —— 等于**用空列表覆盖掉备份，数据彻底没了**。
   修复策略:JSON 损坏先尝试从 `.bak` 加载;备份也坏才抛 `RuntimeError`,**绝不返回空列表让上层继续运行**。
   → 见 [commit 482d0e0](https://github.com/qrx-joe/note/commit/482d0e0) + [commit 9503539](https://github.com/qrx-joe/note/commit/9503539)
 
 - **多维排序的 `reverse=True` 是全局反转,跟 tuple key 一起用会暗坑**
-  原写法:`sorted(memos, key=lambda m: (not m.get('pinned'), m.get('created_at')), reverse=True)` —— 看起来"置顶在前 + 新的在前",其实 `reverse=True` 把 pinned 维度也翻了过来,**置顶项掉到最后**。
+  原写法：`sorted(memos, key=lambda m: (not m.get('pinned'), m.get('created_at')), reverse=True)` —— 看起来"置顶在前 + 新的在前",其实 `reverse=True` 把 pinned 维度也翻了过来,**置顶项掉到最后**。
   修复:利用 Python sorted 的稳定性,**拆成两次排序**——先按时间倒序,再按 pinned 稳定排。
   → 见 [commit 482d0e0](https://github.com/qrx-joe/note/commit/482d0e0)
 
 - **数据文件混进 git 历史**
   `memos.json` 直到 2026-04-04 才被加进 `.gitignore`(项目已经迭代两周)。在那之前所有笔记内容都跟代码一起被 commit 了。
-  教训:**`.gitignore` 必须在第一次 commit 前列清楚运行时产物**,事后补救清不掉历史里 leak 的内容。
+  教训：**`.gitignore` 必须在第一次 commit 前列清楚运行时产物**，事后补救清不掉历史里 leak 的内容。
   → 见 [commit 8e9cf95](https://github.com/qrx-joe/note/commit/8e9cf95)
 
 - **Flask 默认 host 的"开发友好"= 上线不安全**
-  `app.run()` 不显式传 host 时绑定 `127.0.0.1`,但很多教程写 `host="0.0.0.0"` 让局域网也能访问 —— 等于**同 WiFi 任何人都能读你的笔记**。这次主动改回 `127.0.0.1`。
+  `app.run()` 不显式传 host 时绑定 `127.0.0.1`，但很多教程写 `host="0.0.0.0"` 让局域网也能访问 —— 等于**同 WiFi 任何人都能读你的笔记**。这次主动改回 `127.0.0.1`。
   教训:**默认值的"DX 友好"和"prod 安全"经常相反,默认配置要主动审计。**
   → 见 [commit 49fc02c](https://github.com/qrx-joe/note/commit/49fc02c)
 
@@ -124,7 +127,7 @@
   教训:**任何质量工具上线前,本地先全量跑一遍**;CI 是质量卡点,不是上传完就算赢。
 
 - **Windows `.bat` 的两个隐蔽坑**
-  ① 编码必须是 ANSI(GBK) + CRLF,UTF-8 / LF 会乱码或直接执行失败 → [commit 29cefcb](https://github.com/qrx-joe/note/commit/29cefcb)
+  ① 编码必须是 ANSI(GBK) + CRLF，UTF-8 / LF 会乱码或直接执行失败 → [commit 29cefcb](https://github.com/qrx-joe/note/commit/29cefcb)
   ② 错误时窗口秒退,用户看不到错误信息 → [commit 33159e6](https://github.com/qrx-joe/note/commit/33159e6),正常/异常路径都加 `pause`
   顺手加了 `.gitattributes` 强制 `.bat` 文件保留 CRLF,防止 git 跨平台 checkout 时被改成 LF。
 
@@ -269,7 +272,7 @@ LOCK_FILE = "memos.lock"
 ## 📚 更多文档
 
 - [演进路线图 (ROADMAP)](docs/IMPROVEMENT_SUGGESTIONS.md) —— 已完成功能 / 计划中 / 灵感池
-- [截图说明](docs/screenshots/README.md) —— 如何补充演示截图
+- [截图资源](docs/screenshots/README.md) —— 截图文件索引与尺寸规范
 
 ---
 
