@@ -138,11 +138,10 @@ def build_context(memos, memo_id=None, q="", tag=""):
     if memo_id:
         selected = next((m for m in memos if m["id"] == memo_id), None)
 
-    # 侧边栏笔记列表（不过滤，展示全部）
-    sidebar_memos = sorted_memos(memos)
+    # 侧边栏笔记列表：根据搜索/标签条件过滤
+    sidebar_memos = filter_memos(memos, q, tag)
 
-    # 主区域显示：过滤后的列表（用于计数）
-    filtered = filter_memos(sidebar_memos, q, tag)
+    filtered = sidebar_memos
 
     return {
         "sidebar_memos": sidebar_memos,
@@ -161,6 +160,12 @@ def index():
     tag = request.args.get("tag", "").strip()
     memos = load_memos()
     ctx = build_context(memos, q=q, tag=tag)
+
+    if (q or tag) and ctx["sidebar_memos"] and not ctx["selected"]:
+        first_memo = ctx["sidebar_memos"][0]
+        return redirect(
+            url_for("view_memo", memo_id=first_memo["id"], q=q, tag=tag)
+        )
 
     return render_template("index.html", **ctx)
 
@@ -282,4 +287,12 @@ if __name__ == "__main__":
     debug = os.environ.get("FLASK_DEBUG", "false").lower() == "true"
     port = int(os.environ.get("PORT", 5000))
     logger.info(f"启动应用: debug={debug}, port={port}")
+
+    if os.environ.get("AUTO_OPEN", "false").lower() == "true":
+        import webbrowser
+
+        url = f"http://127.0.0.1:{port}"
+        webbrowser.open(url)
+        logger.info(f"已自动打开浏览器: {url}")
+
     app.run(host="127.0.0.1", port=port, debug=debug)
