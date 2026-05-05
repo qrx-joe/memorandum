@@ -157,7 +157,7 @@
                             <form method="POST" action="{{ url_for('pin_memo', memo_id=selected.id) }}" style="display:inline">
                                 <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
                                 <button type="submit" class="btn-action btn-pin" title="{% if selected.pinned %}取消置顶{% else %}置顶{% endif %}">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="{% if selected.pinned %}currentColor{% else %}none' %}" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="17" x2="12" y2="22"/><path d="M5 17h14v-1.76a2 2 0 0 0-1.11-1.79l-1.78-.9A2 2 0 0 1 15 10.76V6a3 3 0 0 0-3-3 3 3 0 0 0-3 3v4.68a2 2 0 0 1-1.11 1.87l-1.78.89A2 2 0 0 0 5 15.24Z"/></svg>
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="{% if selected.pinned %}currentColor{% else %}none{% endif %}" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="17" x2="12" y2="22"/><path d="M5 17h14v-1.76a2 2 0 0 0-1.11-1.79l-1.78-.9A2 2 0 0 1 15 10.76V6a3 3 0 0 0-3-3 3 3 0 0 0-3 3v4.68a2 2 0 0 1-1.11 1.87l-1.78.89A2 2 0 0 0 5 15.24Z"/></svg>
                                 </button>
                             </form>
                             <form method="POST" action="{{ url_for('delete_memo', memo_id=selected.id) }}" style="display:inline" onsubmit="return confirm('确定要删除这个备忘录吗？')">
@@ -183,8 +183,6 @@
                     </div>
                 </div>
             {% endif %}
-            {% endif %}
-
         {% else %}
             <!-- ===== 未选中任何笔记 ===== -->
             <div class="note-empty-state" id="note-empty-state">

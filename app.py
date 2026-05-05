@@ -136,7 +136,7 @@ def build_context(memos, memo_id=None, q="", tag=""):
     # 选中的笔记
     selected = None
     if memo_id:
-        selected = next((m for m in memos if m["id"] == memo_id), None)
+        selected = next((m for m in memos if str(m.get("id", "")) == str(memo_id)), None)
 
     # 侧边栏笔记列表：根据搜索/标签条件过滤
     sidebar_memos = filter_memos(memos, q, tag)
@@ -217,7 +217,7 @@ def add_memo():
 @app.route("/edit/<memo_id>", methods=["GET", "POST"])
 def edit_memo(memo_id):
     memos = load_memos()
-    memo = next((m for m in memos if m["id"] == memo_id), None)
+    memo = next((m for m in memos if str(m.get("id", "")) == str(memo_id)), None)
 
     if not memo:
         flash("备忘录不存在！")
@@ -254,7 +254,7 @@ def edit_memo(memo_id):
 def delete_memo(memo_id):
     memos = load_memos()
     original_len = len(memos)
-    memos = [m for m in memos if m["id"] != memo_id]
+    memos = [m for m in memos if str(m.get("id", "")) != str(memo_id)]
     if len(memos) < original_len:
         save_memos(memos)
         flash("备忘录删除成功！")
