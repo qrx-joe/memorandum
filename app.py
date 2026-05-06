@@ -163,9 +163,7 @@ def index():
 
     if (q or tag) and ctx["sidebar_memos"] and not ctx["selected"]:
         first_memo = ctx["sidebar_memos"][0]
-        return redirect(
-            url_for("view_memo", memo_id=first_memo["id"], q=q, tag=tag)
-        )
+        return redirect(url_for("view_memo", memo_id=first_memo["id"], q=q, tag=tag))
 
     return render_template("index.html", **ctx)
 
